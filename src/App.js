@@ -5,31 +5,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  Link
 } from "react-router-dom";
-import axios from 'axios';
-// import BestBooks from ('./BestBooks');
+// import axios from 'axios';
+// import BestBooks from './BestBooks';
 
 
 
 class App extends React.Component {
-  state = { books: [] };
-
-  componentDidMount() {
-    this.fetchBooks();
-  }
-
-  async fetchBooks() {
-    let apiURL = `${ process.env.REACT_APP_API_URL }/bookRoute`;
-
-    try {
-      let results = await axios.get(apiURL);
-      this.setState({ books: results.data});
-    }
-    catch(err) {
-      console.log(err);
-    }
-  }
+  
 
 
   constructor(props) {
@@ -55,13 +40,37 @@ class App extends React.Component {
     return (
       <>
         <Router>
-          <Header user={this.state.user} onLogout={this.logoutHandler} />
+            <nav>
+                <h1>Books - Books - Books</h1>
+                <Link to = "/">Home</Link>
+                <Link to = "/profile">Profile</Link>
+            </nav>
+
           <Switch>
             <Route exact path="/">
-              {/* TODO: if the user is logged in, render the `BestBooks` component, if they are not, render the `Login` component */}
+                <h1>Home</h1>
+                {/* {this.state.books.length > 0 &&
+                    <>
+                    <h2>Books!</h2>
+                    {this.state.books.map(book => (
+                        <p key = {book._id} > {book.title}</p>
+                    ))}
+                </> */}
+                }
             </Route>
-            {/* TODO: add a route with a path of '/profile' that renders a `Profile` component */}
+            <Route path = "/profile">
+                <h1>Profile Page Here</h1>
+                <p>Welcome to the book world!</p>
+            </Route> 
+            <Route path = "/help">
+                <h1>Help Me!</h1>
+            </Route>
+            <Route>
+                <h1>Not Found!</h1>
+            </Route> 
           </Switch>
+            <Header />
+            {/* <BestBooks /> */}
           <Footer />
         </Router>
       </>
