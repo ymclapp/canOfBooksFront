@@ -1,6 +1,7 @@
 import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
+import Profile from './Profile';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   BrowserRouter as Router,
@@ -14,27 +15,11 @@ import {
 
 
 class App extends React.Component {
+  state = { user: null }
+
   
-
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: null,
-    }
-  }
-
-  loginHandler = (user) => {
-    this.setState({
-      user,
-    })
-  }
-
-  logoutHandler = () => {
-    this.setState({
-      user: null,
-    })
-  }
+  loginHandler = (user) => { this.setState({ user}); };
+  logoutHandler = () => { this.setState({ user: null }); };
 
   render() {
     return (
@@ -43,12 +28,14 @@ class App extends React.Component {
             <nav>
                 <h1>Books - Books - Books</h1>
                 <Link to = "/">Home</Link>
-                <Link to = "/profile">Profile</Link>
+                {this.state.user && <Link to = "/profile">Profile</Link>}
+                <form onSubmit = {this.loginHandler}>
+                <Logout onLogout = {this.logoutHandler} />
             </nav>
 
           <Switch>
             <Route exact path="/">
-                <h1>Home</h1>
+                {/* <BestBooks user = {user} /> */}
                 {/* {this.state.books.length > 0 &&
                     <>
                     <h2>Books!</h2>
@@ -56,11 +43,10 @@ class App extends React.Component {
                         <p key = {book._id} > {book.title}</p>
                     ))}
                 </> */}
-                }
+                {/* } */}
             </Route>
             <Route path = "/profile">
-                <h1>Profile Page Here</h1>
-                <p>Welcome to the book world!</p>
+                <Profile user = {this.state.user} />
             </Route> 
             <Route path = "/help">
                 <h1>Help Me!</h1>
