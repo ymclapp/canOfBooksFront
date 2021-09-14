@@ -7,8 +7,30 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+import axios from 'axios';
+// import BestBooks from ('./BestBooks');
+
+
 
 class App extends React.Component {
+  state = { books: [] };
+
+  componentDidMount() {
+    this.fetchBooks();
+  }
+
+  async fetchBooks() {
+    let apiURL = `${ process.env.REACT_APP_API_URL }/bookRoute`;
+
+    try {
+      let results = await axios.get(apiURL);
+      this.setState({ books: results.data});
+    }
+    catch(err) {
+      console.log(err);
+    }
+  }
+
 
   constructor(props) {
     super(props);

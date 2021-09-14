@@ -1,6 +1,10 @@
 import React from 'react';
 
+
+
 class BestBooks extends React.Component {
+
+
   constructor(props) {
     super(props);
     this.state = {
@@ -11,7 +15,7 @@ class BestBooks extends React.Component {
   /* TODO: Make a GET request to your API to fetch books for the logged in user  */
 
   render() {
-
+    // const { books } = this.props;
     /* TODO: render user's books in a Carousel */
 
     return (
