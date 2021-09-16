@@ -18,7 +18,7 @@ import axios from 'axios';
 
 
 class App extends React.Component {
-  state = { books: null };
+  state = { books: [] };
 
   //Run fetch as soon as the component has loaded
   componentDidMount() {
@@ -48,36 +48,43 @@ class App extends React.Component {
             <nav>
                 <h1>Books - Books - Books</h1>
                 <Link to = "/">Home</Link>
-                {this.state.books && <Link to = "/profile">Profile</Link>}
-                {/* <form onSubmit = {this.loginHandler}>
-                <Logout onLogout = {this.logoutHandler} /> */}
+                <Link to = "/profile">Profile</Link>
             </nav>
 
           <Switch>
+            
             <Route exact path="/">
-                {/* <BestBooks user = {user} /> */}
-                {/* {this.state.books.length > 0 &&
                     <>
-                    <h2>Books!</h2>
+                  <h2>Books!</h2>
                     {this.state.books.map(book => (
-                        <p key = {book._id} > {book.title}</p>
+                      <>
+                        {this.state.books[0]}
+                         {/* {book._id}
+                         {book.title}
+                         {book.description}
+                         {book.email} */}
+                      </>
                     ))}
-                </> */}
-                {/* } */}
+                </>
             </Route>
+            
             <Route path = "/profile">
                 <Profile user = {this.state.books} />
             </Route> 
+            
             <Route path = "/help">
                 <h1>Help Me!</h1>
             </Route>
+            
             <Route>
                 <h1>Not Found!</h1>
             </Route> 
+          
           </Switch>
-            <Header />
-            {/* <BestBooks /> */}
+          
+          <Header />
           <Footer />
+        
         </Router>
       </>
     )

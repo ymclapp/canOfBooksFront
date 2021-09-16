@@ -11,7 +11,7 @@ class BestBooks extends React.Component {
   }
 
   async fetchBooks() {
-    let apiURL = `${ process.env.REACT_APP_API_URL }/bookRoute`;
+    let apiURL = `${ process.env.REACT_APP_API_URL }/books`;  //this does not equal bookRoute
 
     try {
       let results = await axios.get(apiURL);
@@ -25,13 +25,13 @@ class BestBooks extends React.Component {
   /* TODO: Make a GET request to your API to fetch books for the logged in user  */
 
   render() {
-    const books = this.state.books;
+    const books = this.props;
 
     //Simple conditional - show books if there are any
     return (
       <div>
         <h1>Books!</h1>
-        {books && books.length > 0 && <ul>{books.map(...)}</ul>}
+        {books.results.data}
       </div>
     );
 //Single conditional expression (what ? ifTrue : ifFalse)
