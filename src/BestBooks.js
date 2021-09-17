@@ -11,11 +11,11 @@ class BestBooks extends React.Component {
   }
 
   async fetchBooks() {
-    let apiURL = `${ process.env.REACT_APP_API_URL }/books`;  //this does not equal bookRoute
+    let apiURL = `${ process.env.REACT_APP_API_URL }/bookRoute`;  //this does not equal bookRoute
 
     try {
-      let results = await axios.get(apiURL);
-      this.setState({ books: results.data});
+      let allBooks = await axios.get(apiURL);
+      this.setState({ books: allBooks});
     }
     catch(err) {
       console.log(err);
@@ -30,8 +30,8 @@ class BestBooks extends React.Component {
     //Simple conditional - show books if there are any
     return (
       <div>
-        <h1>Books!</h1>
-        {books.results.data}
+        {/* <h1>Books!</h1> */}
+        {books.allBooks}
       </div>
     );
 //Single conditional expression (what ? ifTrue : ifFalse)
