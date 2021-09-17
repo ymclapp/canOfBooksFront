@@ -3,8 +3,6 @@ import Header from './Header';
 import Footer from './Footer';
 import Profile from './Profile';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import Form from 'react-bootstrap/Form';
-// import Button from 'react-bootstrap/Button';
 import {
   BrowserRouter as Router,
   Switch,
@@ -12,13 +10,12 @@ import {
   Link
 } from "react-router-dom";
 import axios from 'axios';
-// import axios from 'axios';
-// import BestBooks from './BestBooks';
+import BestBooks from './BestBooks';
 
 
 
 class App extends React.Component {
-  state = { books: null };
+  state = { books: [] };
 
   //Run fetch as soon as the component has loaded
   componentDidMount() {
@@ -27,10 +24,11 @@ class App extends React.Component {
    }
 
    async fetchBooks() {
-     let apiURL = `${ process.env.REACT_APP_API_URL }/books`;
+     let apiURL = `${ process.env.REACT_APP_API_URL }/bookRoute`;
      try {
        let results = await axios.get(apiURL);
-       this.setState({ books:  results.data });
+       console.log(results);
+       this.setState({ books: results.data });
      }
      catch (err) {
        console.log(err);
@@ -43,41 +41,47 @@ class App extends React.Component {
 
   render() {
     return (
+      // console.log(book);
       <>
         <Router>
-            <nav>
-                <h1>Books - Books - Books</h1>
-                <Link to = "/">Home</Link>
-                {this.state.books && <Link to = "/profile">Profile</Link>}
-                {/* <form onSubmit = {this.loginHandler}>
-                <Logout onLogout = {this.logoutHandler} /> */}
-            </nav>
+          <nav>
+            <h1>Books - Books - Books</h1>
+            <Link to="/">Home</Link>
+            <Link to="/profile">Profile</Link>
+          </nav>
+      <Switch>
+          
+          <Route exact path="/">
+            <>
+              <h2>Books!</h2>
+              <>
+              {this.state.books.map(book => (
+                <BestBooks
+                key={book._id}
+                title={book.title}
+                description={book.description}
+                status={book.status} />
+              ))}
+              </>
+            </>
+          </Route>
 
-          <Switch>
-            <Route exact path="/">
-                {/* <BestBooks user = {user} /> */}
-                {/* {this.state.books.length > 0 &&
-                    <>
-                    <h2>Books!</h2>
-                    {this.state.books.map(book => (
-                        <p key = {book._id} > {book.title}</p>
-                    ))}
-                </> */}
-                {/* } */}
-            </Route>
-            <Route path = "/profile">
-                <Profile user = {this.state.books} />
-            </Route> 
-            <Route path = "/help">
-                <h1>Help Me!</h1>
-            </Route>
-            <Route>
-                <h1>Not Found!</h1>
-            </Route> 
-          </Switch>
-            <Header />
-            {/* <BestBooks /> */}
-          <Footer />
+          <Route path="/profile">
+            <Profile user={this.state.books} />
+          </Route>
+
+          <Route path="/help">
+            <h1>Help Me!</h1>
+          </Route>
+
+          <Route>
+            <h1>Not Found!</h1>
+          </Route>
+
+
+        </Switch>
+        <Header />
+        <Footer />
         </Router>
       </>
     )
