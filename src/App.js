@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import axios from 'axios';
 import BestBooks from './BestBooks';
+import AddABook from './AddABook';
 
 
 
@@ -35,6 +36,17 @@ class App extends React.Component {
      }
    }
 
+   handleSave = async bookInfo => {
+     let apiURL = `${ process.env.REACT_APP_API_URL }/bookRoute`;
+     let results = await axios.post(apiURL, bookInfo);
+     let newBook = results.data;
+     console.log(newBook);
+
+     this.setState({
+       books: [newBook, ...this.state.books]
+     })
+     this.fetchBooks();
+   }
   
   // loginHandler = (user) => { this.setState({ user}); };
   // logoutHandler = () => { this.setState({ user: null }); };
@@ -49,21 +61,25 @@ class App extends React.Component {
             <Link to="/">Home</Link>
             <Link to="/profile">Profile</Link>
           </nav>
+      
       <Switch>
           
           <Route exact path="/">
-            <>
-              <h2>Books!</h2>
+            <h2>HOME</h2>
+            <AddABook onSave={this.handleSave} />
+            {this.state.books.length > 0 &&
               <>
-              {this.state.books.map(book => (
-                <BestBooks
-                key={book._id}
-                title={book.title}
-                description={book.description}
-                status={book.status} />
+                <h2>Books!</h2>
+                {this.state.books.map(book => (
+                  <BestBooks
+                    key={book._id}
+                    title={book.title}
+                    description={book.description}
+                    status={book.status} 
+                  />
               ))}
               </>
-            </>
+            }
           </Route>
 
           <Route path="/profile">
