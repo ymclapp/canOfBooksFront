@@ -1,5 +1,8 @@
+import axios from 'axios';
 import React from 'react';
 import { Form, Button } from 'react-bootstrap'
+
+const SERVER = process.env.REACT_APP_API_URL;
 
 class AddABook extends React.Component<props> {
 
@@ -15,7 +18,12 @@ class AddABook extends React.Component<props> {
         }
         console.log('Hold on, I be saving a book', formData);
 
-        this.props.onSave(formData);
+        let result = axios.post(`${SERVER}/addbook`, formData)
+
+        this.setState({
+            bookFormData: result.data
+        })
+        // this.props.onSave.post(`${SERVER}/addbook`, formData);
 
         event.target.reset();
         elements.title.focus();
