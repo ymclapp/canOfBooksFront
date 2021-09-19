@@ -1,7 +1,7 @@
 import React from 'react';
-import Header from './Header';
+// import Header from './Header';
 import Footer from './Footer';
-import Profile from './Profile';
+// import Profile from './Profile';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   BrowserRouter as Router,
@@ -13,7 +13,7 @@ import axios from 'axios';
 import BestBooks from './BestBooks';
 import AddABook from './AddABook';
 
-
+const SERVER = process.env.REACT_APP_API_URL;
 
 class App extends React.Component {
   state = { books: [] };
@@ -25,7 +25,7 @@ class App extends React.Component {
    }
 
    async fetchBooks() {
-     let apiURL = `${ process.env.REACT_APP_API_URL }/bookRoute`;
+     let apiURL = `${ SERVER }/bookRoute`;
      try {
        let results = await axios.get(apiURL);
        console.log(results);
@@ -37,16 +37,29 @@ class App extends React.Component {
    }
 
    handleSave = async bookInfo => {
-     let apiURL = `${ process.env.REACT_APP_API_URL }/bookRoute`;
-     let results = await axios.post(apiURL, bookInfo);
-     let newBook = results.data;
-     console.log(newBook);
+    let apiURL = `${ SERVER }/bookRoute`;
+    let results = await axios.post(apiURL, bookInfo);
+    let newBook = results.data;
+    console.log(newBook);
 
-     this.setState({
-       books: [newBook, ...this.state.books]
-     })
-     this.fetchBooks();
-   }
+    this.setState({
+      books: [newBook, ...this.state.books]
+    })
+    this.fetchBooks();
+  }
+
+  handleUpdate = async (bookId, bookInfo) => {
+    let apiURL = `${ SERVER }/bookRoute/${bookId}`;
+    await axios.put(apiURL, bookInfo);
+
+    await this.fetchBooks();
+  }
+
+  handleDelete = async bookId => {
+    let apiURL = `${ SERVER }/bookRoute/${bookId}`;
+    await axios.delete(apiURL);
+    await this.fetchBooks();
+  }
   
   // loginHandler = (user) => { this.setState({ user}); };
   // logoutHandler = () => { this.setState({ user: null }); };
@@ -59,6 +72,7 @@ class App extends React.Component {
           <nav>
             <h1>Books - Books - Books</h1>
             <Link to="/">Home</Link>
+            {" "}
             <Link to="/profile">Profile</Link>
           </nav>
       
@@ -66,16 +80,19 @@ class App extends React.Component {
           
           <Route exact path="/">
             <h2>HOME</h2>
-            <AddABook onSave={this.handleSave} />
-            {this.state.books.length > 0 &&
+            <AddABook 
+            onSave={this.handleSave} 
+            />
+            {/* {this.state.books.length > 0 && */}
               <>
                 <h2>Books!</h2>
                 {this.state.books.map(book => (
                   <BestBooks
                     key={book._id}
-                    title={book.title}
+                    title={book}
                     description={book.description}
-                    status={book.status} 
+                    onDelete = {this.handleDelete}
+                    onUpdate = {this.handleUpdate}
                   />
               ))}
               </>
@@ -83,7 +100,8 @@ class App extends React.Component {
           </Route>
 
           <Route path="/profile">
-            <Profile user={this.state.books} />
+            {/* <Profile user={this.state.books} /> */}
+            <h1>This will be the profile page</h1>
           </Route>
 
           <Route path="/help">
@@ -96,7 +114,7 @@ class App extends React.Component {
 
 
         </Switch>
-        <Header />
+
         <Footer />
         </Router>
       </>

@@ -1,6 +1,8 @@
 import React from 'react';
+import { Form, Button } from 'react-bootstrap'
 
-class AddABook extends React.Component {
+class AddABook extends React.Component<props> {
+
     handleSubmit = event => {
         event.preventDefault();
 
@@ -9,27 +11,26 @@ class AddABook extends React.Component {
             title:  elements.title.value,
             description:  elements.description.value,
             status: elements.description.value,
-            email:  elements.email.value
+            email:  elements.email.value,
         }
         console.log('Hold on, I be saving a book', formData);
 
         this.props.onSave(formData);
 
         event.target.reset();
-        // elements.name.focus();
+        elements.title.focus();
     }
 
     render() {
         return (
-            <form method = "post" onSubmit = {this.handleSubmit}>
+            <Form method = "post" onSubmit = {this.handleSubmit}>
                 <input placeholder = "Title" name = "title" />
                 <input placeholder = "Description" name = "description" />
                 <input placeholder = "Status (In/Out)" name = "status" />
                 <input placeholder = "Email" name = "email" />
-                <button type = "submit">
-                    Save That Book!!!
-                </button>
-            </form>
+                
+                <Button type = "submit">Save That Book!!!</Button>
+            </Form>
         )
     }
 }
