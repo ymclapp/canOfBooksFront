@@ -12,22 +12,50 @@ import {
 import axios from 'axios';
 import BestBooks from './BestBooks';
 import AddABook from './AddABook';
+import LoginButton from './LoginButton';
+import { withAuth0 } from '@auth0/auth0-react';
+import LogoutButton from './LogoutButton';
 
 const SERVER = process.env.REACT_APP_API_URL;
 
 class App extends React.Component {
-  state = { books: [] };
+  state = { 
+    books: null,
+    showAddBook: false,
+   };
+
+   toggleShowAddBook = () => {
+     this.setState({
+       showAddBook: !this.state.showAddBook,
+     });
+   }
 
   //Run fetch as soon as the component has loaded
-  componentDidMount() {
+  componentDidUpdate() {
+    if(!this.state.books)
     this.fetchBooks();
 
    }
 
    async fetchBooks() {
+     const { auth0 } = this.props;
+     if(!auth0.isAuthenticated) {
+       return;  //do nothing if not authenticated
+     }
+
+     let claims = await auth0.getIdTokenClaims();
+     console.log(claims);
+     //Grab the raw JWT
+     let jwt = claims.__raw;
+
      let apiURL = `${ SERVER }/bookRoute`;
      try {
-       let results = await axios.get(apiURL);
+       let results = await axios.get(apiURL, {
+         headers: {
+           //Use Authorization header for Authentification
+           'Authorization': `Bearer ${jwt}`,
+         },
+       });
        console.log(results);
        this.setState({ books: results.data });
      }
@@ -65,25 +93,36 @@ class App extends React.Component {
   // logoutHandler = () => { this.setState({ user: null }); };
 
   render() {
+    // const { isAuthenticated } = this.props.auth0;
+    console.log('auth0 in App', this.props);
+
     return (
-      // console.log(book);
       <>
         <Router>
           <nav>
             <h1>Books - Books - Books</h1>
             <Link to="/">Home</Link>
+            {this.props.auth0.isAuthenticated ? <LogoutButton /> : <LoginButton />}
             {" "}
             <Link to="/profile">Profile</Link>
+            
           </nav>
       
       <Switch>
           
           <Route exact path="/">
             <h2>HOME</h2>
+            {!this.state.showAddBook &&
+            <button onClick = {this.toggleShowAddBook}>
+              Add My Book!
+              </button>
+            } 
             <AddABook 
-            onSave={this.handleSave} 
+            show = {this.state.showAddBook}
+            onCancel = {this.toggleShowAddBook}
+            onSave = {this.handleSave} 
             />
-            {/* {this.state.books.length > 0 && */}
+            {this.state.books && this.state.books.length > 0 &&
               <>
                 <h2>Books!</h2>
                 {this.state.books.map(book => (
@@ -122,4 +161,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withAuth0(App);
